@@ -10,10 +10,11 @@ import org.springframework.stereotype.Service;
 public class PostService {
         
     private List<Post> posts = new ArrayList<Post>();
-    // private int nextId=1;
+    private int nextId=1;
 
     public Post addPost(Post post) {
-        // post.setId((nextId++));
+        post.setId((nextId));
+        nextId++;
         posts.add(post);    
         return post;
 
