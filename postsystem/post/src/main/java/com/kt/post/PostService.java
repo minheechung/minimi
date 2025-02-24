@@ -1,63 +1,60 @@
 package com.kt.post;
 
-import java.util.ArrayList;
+// import java.util.ArrayList;
 import java.util.List;
 
+// import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 
 
 @Service
+@RequiredArgsConstructor
 public class PostService {
         
-    private List<Post> posts = new ArrayList<Post>();
-    private int nextId=1;
+    
+    private PostRepository postRepository;
 
     public Post addPost(Post post) {
-        post.setId((nextId));
-        nextId++;
-        posts.add(post);    
-        return post;
+        return postRepository.save(post);
 
     }
 
     public List<Post> getAllPosts() {
-        return posts;
+        return postRepository.findAll();
+        
     }
 
     public Post getPost(int id) {
-        return posts.stream()
-        .filter(post->post.getId()==id)
-        .findFirst().orElse(null);
-                
+        return postRepository.findById(id).orElse(null);
+        
     }
-  
+
     //수정
+    @Transactional
     public Post updatePost(int id, String title, String content, String author) {
-        Post post=getPost(id);
-        if (post!=null) {
-            post.setTitle(title);
-            post.setContent(content);
-            post.setAuthor(author);
-            return post;
+        Post post=postRepository.findById(id).orElse(null);
+        if (post == null) {
+            return null;
         }
-        return null;
+        post.setTitle(title);
+        post.setContent(content);
+        post.setAuthor(author);
+        return postRepository.save(post);
+
     }
     
 
     //삭제 -> 성공여부 T,F로 반환하기 위해 boolean으로 반환
-    public boolean deletePost(int id) {
-        boolean removedpost = posts.removeIf(post->post.getId()==id);
-        if (removedpost) {
-            System.out.println("삭제완료");
+    public boolean deletePost(int id) { 
+        if (postRepository.existsById(id)) {
+        postRepository.deleteById(id);
+        return true;
         } else {
-            System.out.println("삭제할 데이터가 없습니다.");
+          return false;
         }
-        return removedpost;
-    
-        // return posts.removeIf(post->post.getId()==id);
-    
     }
-
-
-
 }
+   
