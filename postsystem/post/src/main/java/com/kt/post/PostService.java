@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 public class PostService {
         
     
-    private PostRepository postRepository;
+    private final PostRepository postRepository;
 
     public Post addPost(Post post) {
         return postRepository.save(post);

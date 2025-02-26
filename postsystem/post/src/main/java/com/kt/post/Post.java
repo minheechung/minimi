@@ -27,10 +27,10 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY) 
     private int id;
 
-    public String title;
-    public String content;
+    private String title;
+    private String content;
 
-    public String author;
+    private String author;
    
  }  
   
